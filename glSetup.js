@@ -3,6 +3,9 @@ const glCanvas = document.querySelector("#glCanvas");
 glCanvas.width = 1920 * rd * 2;
 glCanvas.height = 1080 * rd * 2;
 
+var fpsMeter = new FPSMeter();
+fpsMeter.hide();
+
 function toggleFullScreen() {
     if (!document.fullscreenElement) {
         glCanvas.requestFullscreen();
@@ -94,7 +97,14 @@ let textures = {};
 
 let frameBufferIndex = 0;
 
+function editorAnimation(){
+    // $("#editor-container").css("top", sinN(time*3 +cos(time))*150);
+    // $("#editor-container").css("left", cosN(time*3 + sin(time*1.3))*150);
+}
+
 function render() {
+    editorAnimation();
+
     requestAnimationFrame(render);
     if(!p5SetupCalled) return; //extra defensive - might not need this anymore
 
@@ -162,7 +172,7 @@ async function loadShadersAndAssets(){
     draw = drawing;
     globalEval(shaderArray[5]);
 
-    await Promise.all(assetPromises); //module-callback - define assetPromises
+    await Promise.all(assetPromises).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
 
     textures = handleAssetsAndCreateTextures(...postPromiseAssets); //module-callback - define postPromiseAssets
     
