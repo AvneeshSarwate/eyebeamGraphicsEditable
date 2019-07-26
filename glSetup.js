@@ -162,6 +162,7 @@ let controllersPromise = $.get({url: moduleName+"/controllers.js", dataType: "te
 let headerShader;
 
 const globalEval = eval;
+const vertShader = webgl2Supported ? "vs" : "vs_gl1";
 
 async function loadShadersAndAssets(){
 
@@ -174,19 +175,23 @@ async function loadShadersAndAssets(){
 
     await Promise.all(assetPromises).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
 
-    textures = handleAssetsAndCreateTextures(...postPromiseAssets); //module-callback - define postPromiseAssets
+    let textureInfos = handleAssetsAndCreateTextureInfos(...postPromiseAssets); //module-callback - define postPromiseAssets
+    textures = twgl.createTextures(gl, textureInfos);
     
     // console.log("shaderArray", shaderArray);
     headerShader = shaderArray[0];
 
-    programInfo = twgl.createProgramInfo(gl, ["vs", shaderArray[0] + shaderArray[1]]);
-    programInfo_stage2 = twgl.createProgramInfo(gl, ["vs", shaderArray[0] + shaderArray[2]]);
+    programInfo = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[1]]);
+    programInfo_stage2 = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[2]]);
 
     editors[0].editor.setValue(shaderArray[4], -1);
     editors[1].editor.setValue(shaderArray[1], -1);
     editors[2].editor.setValue(shaderArray[2], -1);
 
     requestAnimationFrame(render);
+
+    if(!webgl2Supported) document.body.onclick = null;
 }
 
-loadShadersAndAssets();
+if(webgl2Supported) loadShadersAndAssets();
+else document.body.onclick = () => loadShadersAndAssets();

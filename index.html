@@ -51,12 +51,20 @@
     </div>
 </body>
 <script id="vs" type="notjs">
-#version 300 es
-in vec4 position;
+    #version 300 es
+    in vec4 position;
 
-void main() {
-gl_Position = position;
-}
+    void main() {
+        gl_Position = position;
+    }
+</script>
+<script id="vs_gl1" type="notjs">
+    precision lowp float; 
+    attribute vec2 position;
+    
+    void main(){
+        gl_Position = vec4( position , 0, 1);
+    }
 </script>
 <script src="glSetup.js"></script>
 <script src="editorSetup.js"></script>

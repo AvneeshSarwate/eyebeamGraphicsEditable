@@ -1,7 +1,7 @@
 let langTools = ace.require("ace/ext/language_tools");
 // langTools.setCompleters([langTools.snippetCompleter, langTools.keyWordCompleter])
 let editors = [null, null, null, null, null];
-let defaultShaders = ["fs", "fs2"]
+
 function initShaderEditor(editorIndex) {
     let editorId = "editor" + editorIndex;
     let editor = ace.edit(editorId);
@@ -18,7 +18,7 @@ function initShaderEditor(editorIndex) {
         clearTimeout(editorInfo.timeout);
         setTimeout(() => {
             editorInfo.text = editorInfo.editor.getValue();
-            let newProgram = twgl.createProgramInfo(gl, ["vs", headerShader + editorInfo.text], (err) => {
+            let newProgram = twgl.createProgramInfo(gl, [vertShader, headerShader + editorInfo.text], (err) => {
                 console.log(err);
             });
             if (editorIndex === 1 && newProgram) {

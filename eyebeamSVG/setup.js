@@ -459,15 +459,24 @@ var frameCount = 0;
 var assetPromises = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid].map(v => v.play());
 var postPromiseAssets = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid];
 
+let createTextureInfo = (srcElem, tag) => {
+    let gl1TextureOptions = webgl2Supported ? {} : {min: gl.LINEAR, mag: gl.LINEAR, wrap: gl.CLAMP_TO_EDGE};
+    console.log("create tex inf0", tag);
+    let sizeOptions = {width: srcElem.videoWidth, height: srcElem.videoHeight};
+    let info = Object.assign({src: srcElem, elemName: tag}, gl1TextureOptions);
+    if(sizeOptions.height) return Object.assign(info, sizeOptions);
+    else return info;
+}
+
 //use twgl to create textures object here
-function handleAssetsAndCreateTextures(eyeVideo1, eyeVideo2, eyeVideo3, selfieVid){
-    return twgl.createTextures(gl, {
-        svgFrame: { src: svgCanvas },
-        eyeVideo1: { src: eyeVideo1 },
-        eyeVideo2: { src: eyeVideo2 },
-        eyeVideo3: { src: eyeVideo3 },
-        selfieVid: { src: selfieVid }
-    });
+function handleAssetsAndCreateTextureInfos(eyeVideo1, eyeVideo2, eyeVideo3, selfieVid){
+    return {
+        svgFrame: createTextureInfo(svgCanvas, "svg"), 
+        eyeVideo1: createTextureInfo(eyeVideo1, "vid1"),
+        eyeVideo2: createTextureInfo(eyeVideo2, "vid2"),
+        eyeVideo3: createTextureInfo(eyeVideo3, "vid3"),
+        selfieVid: createTextureInfo(selfieVid, "cam")
+    };
 }
 
 function refreshUniforms(){
