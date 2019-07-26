@@ -173,7 +173,9 @@ async function loadShadersAndAssets(){
     draw = drawing;
     globalEval(shaderArray[5]);
 
-    await Promise.all(assetPromises).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
+    let vidsToPlay = assetPromisesToPlay();
+    let assetPromisesVal = vidsToPlay.map(v => v.play());
+    await Promise.all(assetPromisesVal).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
 
     let textureInfos = handleAssetsAndCreateTextureInfos(...postPromiseAssets); //module-callback - define postPromiseAssets
     textures = twgl.createTextures(gl, textureInfos);

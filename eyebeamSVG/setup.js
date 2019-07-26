@@ -456,7 +456,7 @@ var speedScale = (time) => 1;
 var frameCount = 0;
 
 
-var assetPromises = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid].map(v => v.play());
+var assetPromisesToPlay = () => [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid]
 var postPromiseAssets = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid];
 
 let createTextureInfo = (srcElem, tag) => {
