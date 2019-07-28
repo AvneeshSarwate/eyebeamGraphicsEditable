@@ -280,6 +280,11 @@ var sliders = Array.from(new Array(127), (e, i) => 0);
 //make SVG manipulatable via SVG.js library
 var svgDoc = SVG.adopt($("#eyebeam")[0]);
 
+const eyeVideo1 = createVideo("eyebeamSVG/eyeblink_004_lower.mp4");
+const eyeVideo2 = createVideo("eyebeamSVG/eyeblink_005_lower.mp4");
+const eyeVideo3 = createVideo("eyebeamSVG/eyeblink_001_lower.mp4");
+const selfieVid = setupWebcam();
+
 svgDoc.size(1920 * rd, 1080 * rd);
 svgDoc.viewbox(0, 0, 1920 * rd, 1080 * rd);
 
@@ -451,24 +456,18 @@ var speedScale = (time) => 1;
 var frameCount = 0;
 
 
-let createTextureInfo = (srcElem, tag) => {
-    let gl1TextureOptions = webgl2Supported ? {} : {min: gl.LINEAR, mag: gl.LINEAR, wrap: gl.CLAMP_TO_EDGE};
-    console.log("create tex inf0", tag);
-    let sizeOptions = {width: srcElem.videoWidth, height: srcElem.videoHeight};
-    let info = Object.assign({src: srcElem, elemName: tag}, gl1TextureOptions);
-    if(sizeOptions.height) return Object.assign(info, sizeOptions);
-    else return info;
-}
+var assetPromises = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid].map(v => v.play());
+var postPromiseAssets = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid];
 
 //use twgl to create textures object here
-function handleAssetsAndCreateTextureInfos(eyeVideo1, eyeVideo2, eyeVideo3, selfieVid){
-    return {
-        svgFrame: createTextureInfo(svgCanvas, "svg"), 
-        eyeVideo1: createTextureInfo(eyeVideo1, "vid1"),
-        eyeVideo2: createTextureInfo(eyeVideo2, "vid2"),
-        eyeVideo3: createTextureInfo(eyeVideo3, "vid3"),
-        selfieVid: createTextureInfo(selfieVid, "cam")
-    };
+function handleAssetsAndCreateTextures(eyeVideo1, eyeVideo2, eyeVideo3, selfieVid){
+    return twgl.createTextures(gl, {
+        svgFrame: { src: svgCanvas },
+        eyeVideo1: { src: eyeVideo1 },
+        eyeVideo2: { src: eyeVideo2 },
+        eyeVideo3: { src: eyeVideo3 },
+        selfieVid: { src: selfieVid }
+    });
 }
 
 function refreshUniforms(){
