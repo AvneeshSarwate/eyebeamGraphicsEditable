@@ -10,7 +10,7 @@ function initShaderEditor(editorIndex) {
     editor.setDisplayIndentGuides(false);
     editor.setShowPrintMargin(false);
     let editorText = "\n\n\n//editor" + editorIndex;
-    editors[editorIndex] = { editor, id: editorId, text: editorText, visible: false, lang: "frac", timeout: null };
+    editors[editorIndex] = { editor, id: editorId, text: editorText, visible: false, lang: "frag", timeout: null };
     editor.setValue(editorText, -1);
     $("#" + editorId).hide();
     editor.session.on("change", (evt) => {
@@ -89,3 +89,6 @@ initShaderEditor(1);
 initShaderEditor(2);
 
 showEditor(null, 0);
+
+if(webgl2Supported) loadShadersAndAssets();
+else document.body.onclick = () => loadShadersAndAssets();

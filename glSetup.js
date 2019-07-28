@@ -203,9 +203,9 @@ async function loadShadersAndAssets(){
 
         setTimeout(() => requestAnimationFrame(render), 100);
 
+        var editorContainer = document.getElementById("editor-container");
+        editorContainer.appendChild(gui.domElement);
+
         if(!webgl2Supported) document.body.onclick = null;
     }).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
 }
-
-if(webgl2Supported) loadShadersAndAssets();
-else document.body.onclick = () => loadShadersAndAssets();
