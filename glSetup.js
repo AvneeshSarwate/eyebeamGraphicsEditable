@@ -164,6 +164,15 @@ let headerShader;
 const globalEval = eval;
 const vertShader = webgl2Supported ? "vs" : "vs_gl1";
 
+const eyeVideo1 = createVideo("eyebeamSVG/eyeblink_004_lower.mp4");
+const eyeVideo2 = createVideo("eyebeamSVG/eyeblink_005_lower.mp4");
+const eyeVideo3 = createVideo("eyebeamSVG/eyeblink_001_lower.mp4");
+const selfieVid = setupWebcam();
+
+var assetPromisesToPlay = () => [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid]
+var postPromiseAssets = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid];
+let playPromises;
+
 async function loadShadersAndAssets(){
 
     let shaderArray = await Promise.all([headerFSreq, fsReq, fsReq2, setupPromise, drawingPromise, controllersPromise]);
@@ -175,24 +184,27 @@ async function loadShadersAndAssets(){
 
     let vidsToPlay = assetPromisesToPlay();
     let assetPromisesVal = vidsToPlay.map(v => v.play());
-    await Promise.all(assetPromisesVal).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
+    playPromises = assetPromisesVal;
+    Promise.all(assetPromisesVal).then(postPromiseVids => {
 
-    let textureInfos = handleAssetsAndCreateTextureInfos(...postPromiseAssets); //module-callback - define postPromiseAssets
-    textures = twgl.createTextures(gl, textureInfos);
-    
-    // console.log("shaderArray", shaderArray);
-    headerShader = shaderArray[0];
 
-    programInfo = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[1]]);
-    programInfo_stage2 = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[2]]);
+        let textureInfos = handleAssetsAndCreateTextureInfos(...postPromiseAssets); //module-callback - define postPromiseAssets
+        textures = twgl.createTextures(gl, textureInfos);
+        
+        // console.log("shaderArray", shaderArray);
+        headerShader = shaderArray[0];
 
-    editors[0].editor.setValue(shaderArray[4], -1);
-    editors[1].editor.setValue(shaderArray[1], -1);
-    editors[2].editor.setValue(shaderArray[2], -1);
+        programInfo = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[1]]);
+        programInfo_stage2 = twgl.createProgramInfo(gl, [vertShader, shaderArray[0] + shaderArray[2]]);
 
-    requestAnimationFrame(render);
+        editors[0].editor.setValue(shaderArray[4], -1);
+        editors[1].editor.setValue(shaderArray[1], -1);
+        editors[2].editor.setValue(shaderArray[2], -1);
 
-    if(!webgl2Supported) document.body.onclick = null;
+        setTimeout(() => requestAnimationFrame(render), 100);
+
+        if(!webgl2Supported) document.body.onclick = null;
+    }).catch(e => console.log("asset error", e)); //module-callback - define assetPromises
 }
 
 if(webgl2Supported) loadShadersAndAssets();

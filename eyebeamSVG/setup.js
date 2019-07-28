@@ -280,11 +280,6 @@ var sliders = Array.from(new Array(127), (e, i) => 0);
 //make SVG manipulatable via SVG.js library
 var svgDoc = SVG.adopt($("#eyebeam")[0]);
 
-const eyeVideo1 = createVideo("eyebeamSVG/eyeblink_004_lower.mp4");
-const eyeVideo2 = createVideo("eyebeamSVG/eyeblink_005_lower.mp4");
-const eyeVideo3 = createVideo("eyebeamSVG/eyeblink_001_lower.mp4");
-const selfieVid = setupWebcam();
-
 svgDoc.size(1920 * rd, 1080 * rd);
 svgDoc.viewbox(0, 0, 1920 * rd, 1080 * rd);
 
@@ -455,9 +450,6 @@ var speedScale = (time) => 1;
 //replaced to just use requestAnimationFrame() later
 var frameCount = 0;
 
-
-var assetPromisesToPlay = () => [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid]
-var postPromiseAssets = [eyeVideo1, eyeVideo2, eyeVideo3, selfieVid];
 
 let createTextureInfo = (srcElem, tag) => {
     let gl1TextureOptions = webgl2Supported ? {} : {min: gl.LINEAR, mag: gl.LINEAR, wrap: gl.CLAMP_TO_EDGE};
